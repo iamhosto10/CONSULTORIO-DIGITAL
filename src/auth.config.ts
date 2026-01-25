@@ -7,7 +7,9 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isOnPublicRoute = ['/login', '/register'].includes(nextUrl.pathname);
+      const isOnPublicRoute =
+        ['/login', '/register'].includes(nextUrl.pathname) ||
+        nextUrl.pathname.startsWith('/p/');
 
       if (isOnPublicRoute) return true;
 
