@@ -17,7 +17,10 @@ export const authConfig = {
     },
     jwt({ token, user }) {
       if (user) {
-        token.id = (user as { _id?: string } & typeof user)._id?.toString() || user.id;
+        token.id =
+          (user as { _id?: string } & typeof user)._id?.toString() ||
+          user.id ||
+          '';
         token.especialidad = user.especialidad;
         token.registroMedico = user.registroMedico;
       }
