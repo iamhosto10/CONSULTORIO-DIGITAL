@@ -4,7 +4,8 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'moment/locale/es';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import CreateAppointmentModal from './CreateAppointmentModal';
 
 // Configure moment locale
 moment.locale('es');
@@ -13,9 +14,13 @@ const localizer = momentLocalizer(moment);
 
 interface CalendarViewProps {
   appointments: any[];
+  patients: any[];
 }
 
-const CalendarView = ({ appointments }: CalendarViewProps) => {
+const CalendarView = ({ appointments, patients }: CalendarViewProps) => {
+  const [showModal, setShowModal] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState<{ start: Date; end: Date } | null>(null);
+
   const events = useMemo(() => {
     return appointments.map((apt) => ({
       title: apt.patientId?.nombre || 'Cita Reservada',
@@ -25,8 +30,9 @@ const CalendarView = ({ appointments }: CalendarViewProps) => {
     }));
   }, [appointments]);
 
-  const handleSelectSlot = (slotInfo: any) => {
-    console.log('Abrir modal en:', slotInfo);
+  const handleSelectSlot = (slotInfo: { start: Date; end: Date }) => {
+    setSelectedSlot(slotInfo);
+    setShowModal(true);
   };
 
   return (
@@ -61,6 +67,12 @@ const CalendarView = ({ appointments }: CalendarViewProps) => {
             color: 'white',
           },
         })}
+      />
+      <CreateAppointmentModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        selectedSlot={selectedSlot}
+        patients={patients}
       />
     </div>
   );
