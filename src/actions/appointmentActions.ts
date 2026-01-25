@@ -3,6 +3,7 @@
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Appointment, { IAppointment } from '@/models/Appointment';
+import '@/models/Patient'; // Importar modelo para populate
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import mongoose from 'mongoose';
@@ -109,15 +110,18 @@ export async function getAppointments(start: Date | string, end: Date | string) 
       professionalId: session.user.id,
       fechaInicio: { $gte: startDate, $lte: endDate },
     })
+      .populate('patientId', 'nombre')
       .sort({ fechaInicio: 1 })
       .lean();
 
     // Serializar resultados
-    return appointments.map((apt) => ({
+    return appointments.map((apt: any) => ({
       ...apt,
       _id: apt._id.toString(),
       professionalId: apt.professionalId.toString(),
-      patientId: apt.patientId.toString(),
+      patientId: apt.patientId
+        ? { _id: apt.patientId._id.toString(), nombre: apt.patientId.nombre }
+        : null,
       fechaInicio: apt.fechaInicio.toISOString(),
       fechaFin: apt.fechaFin.toISOString(),
       createdAt: apt.createdAt.toISOString(),
