@@ -1,21 +1,25 @@
-'use server';
+"use server";
 
-import { signIn } from '@/auth';
-import { AuthError } from 'next-auth';
+import { signIn } from "@/auth";
+import { AuthError } from "next-auth";
 
 export async function authenticate(
   prevState: string | undefined,
-  formData: FormData
-): Promise<string | undefined> {
+  formData: FormData,
+) {
   try {
-    await signIn('credentials', formData);
+    // AQUI ESTA EL CAMBIO: Agregamos el redirectTo
+    await signIn("credentials", {
+      ...Object.fromEntries(formData),
+      redirectTo: "/dashboard",
+    });
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
-        case 'CredentialsSignin':
-          return 'Credenciales inválidas.';
+        case "CredentialsSignin":
+          return "Credenciales inválidas.";
         default:
-          return 'Algo salió mal.';
+          return "Algo salió mal.";
       }
     }
     throw error;
