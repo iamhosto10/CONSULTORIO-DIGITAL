@@ -1,141 +1,90 @@
 'use client';
-
-import { useState, useEffect, useCallback } from 'react';
-import { Calendar, momentLocalizer, Views, SlotInfo } from 'react-big-calendar';
+import { useState, useEffect } from 'react';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'moment/locale/es';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { getPublicAvailability, bookPublicAppointment } from '@/actions/public-booking-actions';
-import { Loader2, X, CheckCircle } from 'lucide-react';
 
 moment.locale('es');
 const localizer = momentLocalizer(moment);
 
-interface CalendarEvent {
-  start: Date;
-  end: Date;
-  title: string;
-  isBusy?: boolean;
-}
+export default function PublicCalendar({ professionalId }: { professionalId: string }) {
+  const [events, setEvents] = useState<any[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState<any>(null);
 
-interface PublicCalendarProps {
-  professionalId: string;
-}
-
-export default function PublicCalendar({ professionalId }: PublicCalendarProps) {
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedSlot, setSelectedSlot] = useState<{ start: Date; end: Date } | null>(null);
-  const [formData, setFormData] = useState({ nombre: '', email: '', telefono: '' });
-  const [submitting, setSubmitting] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-
-  const fetchAvailability = useCallback(async () => {
-    try {
-      const availability = await getPublicAvailability(professionalId);
-      const busyEvents = availability.map((slot: { start: string | Date; end: string | Date }) => ({
-        start: new Date(slot.start),
-        end: new Date(slot.end),
-        title: 'Ocupado',
-        isBusy: true,
-      }));
-      setEvents(busyEvents);
-    } catch (error) {
-      console.error('Failed to load availability', error);
-    }
-  }, [professionalId]);
+  const fetchAvailability = async () => {
+      try {
+        const data = await getPublicAvailability(professionalId);
+        // Mapear fechas de string a Date object
+        const formatted = data.map((evt: any) => ({
+            ...evt,
+            start: new Date(evt.start),
+            end: new Date(evt.end),
+            title: 'Ocupado'
+        }));
+        setEvents(formatted);
+      } catch (error) {
+          console.error("Error fetching availability", error);
+      }
+  };
 
   useEffect(() => {
     fetchAvailability();
-  }, [fetchAvailability]);
+  }, [professionalId]);
 
-  const handleSelectSlot = (slotInfo: SlotInfo) => {
-    // Prevent selecting past dates
-    if (moment(slotInfo.start).isBefore(moment(), 'minute')) {
-      return;
+  const handleSelectSlot = (slotInfo: any) => {
+    // Validar que no sea una fecha pasada
+    if (slotInfo.start < new Date()) {
+        alert("No puedes agendar en el pasado.");
+        return;
     }
 
-    // Check overlap with existing events
+    // Check for overlap with existing events (client side check for better UX)
     const hasOverlap = events.some(
-      (event) =>
-        (event.start < slotInfo.end && event.end > slotInfo.start)
-    );
+        (event) =>
+          (event.start < slotInfo.end && event.end > slotInfo.start)
+      );
 
-    if (hasOverlap) return;
+    if (hasOverlap) {
+        // Optional: Alert user or just ignore
+        return;
+    }
 
-    setSelectedSlot({ start: slotInfo.start, end: slotInfo.end });
-    setModalOpen(true);
-    setMessage(null);
+    setSelectedSlot(slotInfo);
+    setShowModal(true);
   };
 
-  const handleBook = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedSlot) return;
-
-    setSubmitting(true);
-    setMessage(null);
-
-    const payload = new FormData();
-    payload.append('professionalId', professionalId);
-    payload.append('nombre', formData.nombre);
-    payload.append('email', formData.email);
-    payload.append('telefono', formData.telefono);
-    payload.append('fechaInicio', selectedSlot.start.toISOString());
-    payload.append('fechaFin', selectedSlot.end.toISOString());
-
-    try {
-      const result = await bookPublicAppointment(payload);
-
+  const handleBooking = async (formData: FormData) => {
+      const result = await bookPublicAppointment(formData);
       if (result.success) {
-        setMessage({ type: 'success', text: result.message || 'Solicitud enviada' });
-        // Wait a bit before closing to show success message
-        setTimeout(() => {
-          setModalOpen(false);
-          setFormData({ nombre: '', email: '', telefono: '' });
-          fetchAvailability(); // Refresh to update availability
-        }, 2000);
+          alert("Cita reservada con éxito. Revisa tu correo.");
+          setShowModal(false);
+          fetchAvailability(); // Refresh availability
       } else {
-        setMessage({ type: 'error', text: result.message || 'Error al solicitar cita' });
+          alert(result.message || "Error al reservar");
       }
-    } catch (error) {
-       setMessage({ type: 'error', text: 'Error de conexión' });
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const eventStyleGetter = (event: CalendarEvent) => {
-    if (event.isBusy) {
-      return {
-        style: {
-          backgroundColor: '#d1d5db', // bg-gray-300
-          color: '#374151', // text-gray-700
-          border: '1px solid #9ca3af',
-          cursor: 'not-allowed',
-        },
-      };
-    }
-    return {};
   };
 
   return (
-    <div className="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-100 mt-8">
-      <div className="h-[600px]">
-        <Calendar
-          localizer={localizer}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          defaultView={Views.WEEK}
-          views={['week', 'day']}
-          selectable
-          onSelectSlot={handleSelectSlot}
-          eventPropGetter={eventStyleGetter}
-          min={new Date(0, 0, 0, 8, 0, 0)} // 8:00 AM
-          max={new Date(0, 0, 0, 20, 0, 0)} // 8:00 PM
-          step={30}
-          timeslots={2}
-          messages={{
+    <div className="h-[600px] bg-white p-4 rounded-lg shadow">
+      <Calendar
+        localizer={localizer}
+        events={events}
+        startAccessor="start"
+        endAccessor="end"
+        style={{ height: 500 }} // Altura explícita crítica
+        selectable={true} // CRÍTICO
+        onSelectSlot={handleSelectSlot}
+        defaultView="week"
+        views={['week', 'day']}
+        min={new Date(0, 0, 0, 8, 0, 0)} // 8:00 AM
+        max={new Date(0, 0, 0, 18, 0, 0)} // 6:00 PM
+        eventPropGetter={() => ({
+            className: 'bg-gray-400 text-white cursor-not-allowed opacity-75',
+        })}
+        messages={{
             next: 'Siguiente',
             previous: 'Anterior',
             today: 'Hoy',
@@ -146,98 +95,31 @@ export default function PublicCalendar({ professionalId }: PublicCalendarProps) 
             time: 'Hora',
             event: 'Evento',
             noEventsInRange: 'No hay citas en este rango',
-          }}
-          culture='es'
-        />
-      </div>
+        }}
+      />
 
-      {/* Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
-            <div className="p-4 border-b flex justify-between items-center bg-gradient-to-r from-blue-50 to-white">
-              <h3 className="font-bold text-lg text-blue-900">Confirmar Reserva</h3>
-              <button
-                onClick={() => setModalOpen(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100"
-              >
-                <X size={20} />
-              </button>
-            </div>
+      {/* Renderiza aquí tu Modal condicionalmente */}
+      {showModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-6 rounded shadow-xl w-96">
+                  <h3 className="text-xl font-bold mb-4">Reservar Cita</h3>
+                  <form action={handleBooking} className="flex flex-col gap-3">
+                      {/* Inputs ocultos para las fechas */}
+                      <input type="hidden" name="professionalId" value={professionalId} />
+                      <input type="hidden" name="fechaInicio" value={selectedSlot?.start.toISOString()} />
+                      <input type="hidden" name="fechaFin" value={selectedSlot?.end.toISOString()} />
 
-            <div className="p-6">
-              {message?.type === 'success' ? (
-                 <div className="text-center py-8">
-                    <div className="mx-auto bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                        <CheckCircle className="text-green-600 w-8 h-8" />
-                    </div>
-                    <p className="text-xl font-bold text-green-700 mb-2">{message.text}</p>
-                    <p className="text-sm text-gray-500">Te hemos enviado un correo con los detalles.</p>
-                 </div>
-              ) : (
-                <form onSubmit={handleBook} className="space-y-4">
-                  <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
-                    <p className="text-sm text-blue-800">
-                      <span className="font-semibold">Fecha:</span> {selectedSlot && moment(selectedSlot.start).format('LL')} <br/>
-                      <span className="font-semibold">Hora:</span> {selectedSlot && moment(selectedSlot.start).format('LT')} - {selectedSlot && moment(selectedSlot.end).format('LT')}
-                    </p>
-                  </div>
+                      <input name="nombre" placeholder="Tu Nombre" required className="border p-2 rounded" />
+                      <input name="email" type="email" placeholder="Tu Email" required className="border p-2 rounded" />
+                      <input name="telefono" placeholder="Tu Teléfono" required className="border p-2 rounded" />
 
-                  {message?.type === 'error' && (
-                    <div className="p-3 bg-red-50 text-red-700 rounded-md text-sm border border-red-100">
-                      {message.text}
-                    </div>
-                  )}
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre Completo</label>
-                    <input
-                      type="text"
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      placeholder="Ej. Juan Pérez"
-                      value={formData.nombre}
-                      onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Email</label>
-                    <input
-                      type="email"
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      placeholder="ejemplo@correo.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Teléfono</label>
-                    <input
-                      type="tel"
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                      placeholder="Ej. 099123456"
-                      value={formData.telefono}
-                      onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center mt-4"
-                  >
-                    {submitting ? <Loader2 className="animate-spin mr-2 w-5 h-5" /> : null}
-                    {submitting ? 'Procesando...' : 'Confirmar Reserva'}
-                  </button>
-                </form>
-              )}
-            </div>
+                      <div className="flex gap-2 justify-end mt-4">
+                          <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 bg-gray-200 rounded">Cancelar</button>
+                          <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">Confirmar</button>
+                      </div>
+                  </form>
+              </div>
           </div>
-        </div>
       )}
     </div>
   );
