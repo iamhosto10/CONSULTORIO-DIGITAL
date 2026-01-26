@@ -3,7 +3,9 @@ import { connectDB } from '@/lib/db';
 import Patient, { IPatient, IClinicalRecord } from '@/models/Patient';
 import { notFound } from 'next/navigation';
 import ClinicalNoteForm from '@/components/patients/ClinicalNoteForm';
-import { User, Phone, Mail, Calendar, Clock, FileText } from 'lucide-react';
+import { User, Phone, Mail, Calendar, Clock, FileText, Printer } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import moment from 'moment';
 import 'moment/locale/es';
 
@@ -139,16 +141,28 @@ export default async function PatientDetailPage(props: PageProps) {
 
                     {/* Content */}
                     <div className="flex-1 ml-8 md:ml-0 bg-slate-50 rounded-lg border border-slate-200 p-4 shadow-sm">
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-2">
-                        {record.diagnostico && (
-                            <span className="font-bold text-blue-900 text-md">
-                            {record.diagnostico}
-                            </span>
-                        )}
-                        <span className="text-xs font-medium text-slate-500 flex items-center mt-1 sm:mt-0">
-                          <Clock className="h-3 w-3 mr-1" />
-                          {moment(record.fecha).format('LLL')}
-                        </span>
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2 gap-2">
+                         <div className="flex items-center gap-2">
+                          {record.diagnostico && (
+                              <span className="font-bold text-blue-900 text-md">
+                              {record.diagnostico}
+                              </span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs font-medium text-slate-500 flex items-center">
+                            <Clock className="h-3 w-3 mr-1" />
+                            {moment(record.fecha).format('LLL')}
+                          </span>
+                          {record._id && (
+                            <Link href={`/dashboard/print/receta/${record._id}`} target="_blank">
+                              <Button variant="outline" size="sm" className="h-8 w-8 p-0" title="Imprimir Receta">
+                                <Printer className="h-4 w-4 text-slate-600" />
+                                <span className="sr-only">Imprimir</span>
+                              </Button>
+                            </Link>
+                          )}
+                        </div>
                       </div>
                       <div className="text-slate-700 whitespace-pre-wrap">
                         {record.nota}

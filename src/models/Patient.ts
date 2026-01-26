@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface IClinicalRecord {
+  _id?: string;
   fecha: Date;
   nota: string;
   diagnostico?: string;
