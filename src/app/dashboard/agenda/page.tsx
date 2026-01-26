@@ -1,4 +1,5 @@
 import { getAppointments } from '@/actions/appointmentActions';
+import { getPatients } from '@/actions/patientActions';
 import CalendarView from '@/components/dashboard/Calendar';
 
 export default async function AgendaPage() {
@@ -8,13 +9,16 @@ export default async function AgendaPage() {
   const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
   const end = new Date(now.getFullYear(), now.getMonth() + 2, 0);
 
-  const appointments = await getAppointments(start, end);
+  const [appointments, patients] = await Promise.all([
+    getAppointments(start, end),
+    getPatients(),
+  ]);
 
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold tracking-tight">Agenda</h2>
       <div className="bg-white shadow rounded-lg p-4 h-[600px]">
-        <CalendarView appointments={appointments} />
+        <CalendarView appointments={appointments} patients={patients} />
       </div>
     </div>
   );

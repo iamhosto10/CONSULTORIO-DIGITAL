@@ -5,15 +5,23 @@
 ▲ Next.js 16.1.4 (Turbopack)
 - Local:         http://localhost:3000
 - Network:       http://192.168.0.2:3000
-- Environments: .env.local
 
 ✓ Starting...
 ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
-✓ Ready in 1209ms
-○ Compiling /dashboard/pacientes ...
- GET /dashboard/pacientes 200 in 5.3s (compile: 4.1s, proxy.ts: 163ms, render: 1025ms)
- GET /dashboard/pacientes 200 in 854ms (compile: 105ms, proxy.ts: 13ms, render: 736ms)
- POST /dashboard/pacientes 200 in 547ms (compile: 7ms, proxy.ts: 14ms, render: 526ms)
-✓ Compiled in 63ms
-✓ Compiled in 295ms
-✓ Compiled in 231ms
+✓ Ready in 1687ms
+○ Compiling /dashboard/agenda ...
+Error fetching appointments: Error: No autenticado
+    at getAppointments (src/actions/appointmentActions.ts:101:13)
+    at async AgendaPage (src/app/dashboard/agenda/page.tsx:12:36)
+   99 |     const session = await auth();
+  100 |     if (!session?.user?.id) {
+> 101 |       throw new Error('No autenticado');
+      |             ^
+  102 |     }
+  103 |
+  104 |     await connectDB();
+Your app (or one of its dependencies) is using an outdated JSX transform. Update to the modern JSX transform for faster performance: https://react.dev/link/new-jsx-transform
+ GET /dashboard/agenda 200 in 7.6s (compile: 6.6s, proxy.ts: 147ms, render: 874ms)
+✓ Compiled in 71ms
+✓ Compiled in 218ms
+[?25h
