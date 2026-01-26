@@ -41,11 +41,12 @@ export async function bookPublicAppointment(formData: FormData) {
     const nombre = formData.get('nombre') as string;
     const email = formData.get('email') as string;
     const telefono = formData.get('telefono') as string;
+    const cedula = formData.get('cedula') as string;
     const startStr = formData.get('fechaInicio') as string;
     const endStr = formData.get('fechaFin') as string;
 
     // Basic validation
-    if (!professionalId || !nombre || !email || !telefono || !startStr || !endStr) {
+    if (!professionalId || !nombre || !email || !telefono || !cedula || !startStr || !endStr) {
       return { success: false, message: 'Todos los campos son obligatorios' };
     }
 
@@ -73,17 +74,20 @@ export async function bookPublicAppointment(formData: FormData) {
 
     if (!patient) {
       // Create new patient
-      // Since 'cedula' is required but not asked in the public form, generate a placeholder
-      const tempCedula = `WEB-${Date.now().toString().slice(-8)}${Math.floor(Math.random() * 100)}`;
-
       patient = await Patient.create({
         professionalId,
         nombre,
         email,
         telefono,
-        cedula: tempCedula,
+        cedula,
         historiaClinica: [],
       });
+    } else {
+      // Update existing patient info if needed
+      patient.cedula = cedula;
+      patient.nombre = nombre;
+      patient.telefono = telefono;
+      await patient.save();
     }
 
     // 2. Check for conflicts
