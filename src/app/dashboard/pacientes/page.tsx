@@ -1,7 +1,8 @@
-import { getPatients } from '@/actions/patientActions';
-import PatientsHeader from '@/components/dashboard/PatientsHeader';
-import Search from '@/components/dashboard/Search';
-import { FileText } from 'lucide-react';
+import { getPatients } from "@/actions/patientActions";
+import PatientsHeader from "@/components/dashboard/PatientsHeader";
+import Search from "@/components/dashboard/Search";
+import { Eye, FileText } from "lucide-react";
+import Link from "next/link";
 
 interface Patient {
   _id: string;
@@ -17,7 +18,7 @@ export default async function Page(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const query = searchParams?.query || '';
+  const query = searchParams?.query || "";
   const patients: Patient[] = await getPatients(query);
 
   return (
@@ -30,11 +31,15 @@ export default async function Page(props: {
 
       {patients.length === 0 ? (
         <div className="mt-6 flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-gray-300 bg-gray-50 p-8 text-center animate-in fade-in-50">
-           <h3 className="text-sm font-semibold text-gray-900">No hay pacientes</h3>
-           <p className="text-sm text-gray-500">Comienza registrando un nuevo paciente.</p>
+          <h3 className="text-sm font-semibold text-gray-900">
+            No hay pacientes
+          </h3>
+          <p className="text-sm text-gray-500">
+            Comienza registrando un nuevo paciente.
+          </p>
         </div>
       ) : (
-         <div className="mt-6 flow-root">
+        <div className="mt-6 flow-root">
           <div className="inline-block min-w-full align-middle">
             <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
               {/* Mobile View */}
@@ -51,16 +56,20 @@ export default async function Page(props: {
                         </div>
                         <p className="text-sm text-gray-500">{patient.email}</p>
                       </div>
-                      <div className="text-sm text-gray-500">{patient.cedula}</div>
+                      <div className="text-sm text-gray-500">
+                        {patient.cedula}
+                      </div>
                     </div>
                     <div className="flex w-full items-center justify-between pt-4">
-                       <div>
-                         <p className="text-sm text-gray-500">{patient.telefono}</p>
-                       </div>
-                       <button className="flex items-center gap-2 rounded-md border p-2 hover:bg-gray-100 text-sm">
-                          <FileText className="w-4 h-4" />
-                          Historia
-                       </button>
+                      <div>
+                        <p className="text-sm text-gray-500">
+                          {patient.telefono}
+                        </p>
+                      </div>
+                      <button className="flex items-center gap-2 rounded-md border p-2 hover:bg-gray-100 text-sm">
+                        <FileText className="w-4 h-4" />
+                        Historia
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -104,10 +113,29 @@ export default async function Page(props: {
                       </td>
                       <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex justify-end gap-3">
-                            <button className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-500" title="Ver Historia">
-                               <FileText className="h-4 w-4" />
-                               <span className="hidden lg:inline">Ver Historia</span>
+                          <button
+                            className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-500"
+                            title="Ver Historia"
+                          >
+                            <FileText className="h-4 w-4" />
+                            <span className="hidden lg:inline">
+                              Ver Historia
+                            </span>
+                          </button>
+                          <Link
+                            href={`/dashboard/pacientes/${patient._id}`}
+                            className="cursor-pointer"
+                          >
+                            <button
+                              className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-500 cursor-pointer"
+                              title="Ver Historia"
+                            >
+                              <Eye className="h-4 w-4" />
+                              <span className="hidden lg:inline">
+                                Ver Paciente
+                              </span>
                             </button>
+                          </Link>
                         </div>
                       </td>
                     </tr>
