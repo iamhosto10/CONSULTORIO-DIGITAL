@@ -4,10 +4,16 @@ import { useActionState } from 'react';
 import { addClinicalNote } from '@/actions/clinical-actions';
 import { Save } from 'lucide-react';
 
-const initialState = {
+type ActionState = {
+  success: boolean;
+  message?: string;
+  errors?: Record<string, string[]>;
+};
+
+const initialState: ActionState = {
   success: false,
   message: '',
-  errors: {} as Record<string, string[]>,
+  errors: {},
 };
 
 export default function ClinicalNoteForm({ patientId }: { patientId: string }) {
