@@ -4,6 +4,10 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import mongoose from 'mongoose';
 import PublicCalendar from '@/components/public/PublicCalendar';
+import { Card, CardContent } from '@/components/ui/card';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Calendar as CalendarIcon } from 'lucide-react';
 
 interface Props {
   params: Promise<{ userId: string }>;
@@ -62,71 +66,66 @@ export default async function PublicProfilePage({ params }: Props) {
     : 'Dr';
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-        {/* Header */}
-        <header className="bg-blue-600 py-4 shadow-md">
-            <div className="container mx-auto px-4">
-                <h1 className="text-white text-lg font-semibold tracking-wide">Consultorio Digital</h1>
-            </div>
-        </header>
+    <div className="min-h-screen bg-slate-50 font-sans">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-b from-blue-600 to-blue-50 pb-32 pt-12">
+        <div className="container mx-auto px-4 text-center text-white">
+           <h1 className="text-2xl font-semibold tracking-wide opacity-90">Consultorio Digital</h1>
+           <p className="mt-2 text-blue-100">Reserva tu cita de manera rápida y segura</p>
+        </div>
+      </div>
 
-        {/* Main Content */}
-        <main className="flex-grow flex flex-col items-center justify-start p-4 sm:p-6 space-y-12">
-            <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden transition-all duration-300 hover:shadow-2xl">
-                {/* Upper decorative background */}
-                <div className="h-32 bg-gradient-to-r from-blue-500 to-blue-600"></div>
-
-                <div className="px-8 pb-8">
-                    {/* Avatar (negative margin to pull it up) */}
-                    <div className="relative -mt-16 mb-6 flex justify-center">
-                        <div className="h-32 w-32 rounded-full bg-white p-1.5 shadow-lg">
-                            <div className="h-full w-full rounded-full bg-blue-50 flex items-center justify-center text-blue-600 text-4xl font-bold border-2 border-blue-100">
+      <main className="container mx-auto px-4 -mt-20 space-y-8 pb-12">
+        {/* Doctor Card */}
+        <div className="flex justify-center">
+            <Card className="w-full max-w-2xl shadow-xl border-0 overflow-visible">
+                <CardContent className="pt-0 relative flex flex-col items-center pb-8">
+                    {/* Avatar */}
+                    <div className="-mt-16 mb-4">
+                        <Avatar className="h-32 w-32 border-4 border-white shadow-lg">
+                            <AvatarFallback className="bg-blue-100 text-blue-600 text-4xl font-bold">
                                 {initials}
-                            </div>
-                        </div>
+                            </AvatarFallback>
+                        </Avatar>
                     </div>
 
-                    {/* Info */}
-                    <div className="text-center space-y-3">
-                        <h2 className="text-3xl font-bold text-gray-900 leading-tight">
-                            {doctor.nombre}
-                        </h2>
-                        <div className="inline-block px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-semibold mb-2">
+                    <div className="text-center space-y-2 px-4 w-full">
+                        <h2 className="text-3xl font-bold text-slate-900">{doctor.nombre}</h2>
+                         <div className="inline-flex items-center rounded-full border border-transparent bg-blue-50 text-blue-700 hover:bg-blue-100 text-lg py-1 px-4 font-semibold transition-colors">
                             {doctor.especialidad}
-                        </div>
-                        <p className="text-sm text-gray-500 flex items-center justify-center gap-1">
-                            <span className="font-medium">Registro Médico:</span>
-                            <span>{doctor.registroMedico}</span>
+                         </div>
+                        <p className="text-slate-500 mt-2 font-medium">
+                            Registro Médico: {doctor.registroMedico}
                         </p>
                     </div>
 
-                    {/* CTA */}
-                    <div className="mt-8 space-y-4">
-                        <a
-                            href="#agendar"
-                            className="block w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 text-white text-center font-bold text-lg rounded-xl transition duration-200 shadow-lg hover:shadow-blue-500/30 transform hover:-translate-y-0.5"
-                        >
-                            Agendar Cita Ahora
-                        </a>
-                        <p className="text-xs text-center text-gray-400">
-                            Reserva segura y confidencial
-                        </p>
+                    <div className="mt-8 flex gap-4 w-full max-w-xs">
+                        <Button className="w-full text-lg h-12 shadow-md" asChild>
+                            <a href="#agendar">Agendar Cita</a>
+                        </Button>
                     </div>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
+        </div>
 
-            {/* Calendar Section */}
-            <div id="agendar" className="w-full max-w-5xl">
-                <div className="text-center mb-6">
-                    <h2 className="text-2xl font-bold text-gray-800">Selecciona un horario disponible</h2>
-                    <p className="text-gray-500 mt-2">Haz clic en un espacio vacío para reservar tu cita.</p>
-                </div>
+        {/* Calendar Section */}
+        <div id="agendar" className="max-w-4xl mx-auto">
+             <div className="mb-6 text-center">
+                <h3 className="text-2xl font-bold text-slate-800 flex items-center justify-center gap-2">
+                    <CalendarIcon className="w-6 h-6 text-primary" />
+                    Agenda Disponible
+                </h3>
+                <p className="text-slate-500">Selecciona el horario que mejor te convenga</p>
+             </div>
+
+             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8">
                 <PublicCalendar professionalId={userId} />
-            </div>
-        </main>
+             </div>
+        </div>
+      </main>
 
-        {/* Footer */}
-        <footer className="py-6 text-center text-gray-400 text-sm">
+       {/* Footer */}
+        <footer className="py-8 text-center text-slate-400 text-sm bg-white border-t border-slate-100">
             &copy; {new Date().getFullYear()} Consultorio Digital. Todos los derechos reservados.
         </footer>
     </div>
