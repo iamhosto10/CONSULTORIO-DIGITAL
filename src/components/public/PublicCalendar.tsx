@@ -109,6 +109,7 @@ export default function PublicCalendar({ professionalId }: { professionalId: str
                       <input type="hidden" name="fechaInicio" value={selectedSlot?.start.toISOString()} />
                       <input type="hidden" name="fechaFin" value={selectedSlot?.end.toISOString()} />
 
+                      <input name="cedula" placeholder="Cédula / Documento de Identidad" required className="border p-2 rounded" />
                       <input name="nombre" placeholder="Tu Nombre" required className="border p-2 rounded" />
                       <input name="email" type="email" placeholder="Tu Email" required className="border p-2 rounded" />
                       <input name="telefono" placeholder="Tu Teléfono" required className="border p-2 rounded" />
