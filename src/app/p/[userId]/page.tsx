@@ -3,6 +3,7 @@ import User, { IUser } from '@/models/User';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import mongoose from 'mongoose';
+import PublicCalendar from '@/components/public/PublicCalendar';
 
 interface Props {
   params: Promise<{ userId: string }>;
@@ -70,7 +71,7 @@ export default async function PublicProfilePage({ params }: Props) {
         </header>
 
         {/* Main Content */}
-        <main className="flex-grow flex items-center justify-center p-4 sm:p-6">
+        <main className="flex-grow flex flex-col items-center justify-start p-4 sm:p-6 space-y-12">
             <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden transition-all duration-300 hover:shadow-2xl">
                 {/* Upper decorative background */}
                 <div className="h-32 bg-gradient-to-r from-blue-500 to-blue-600"></div>
@@ -112,6 +113,15 @@ export default async function PublicProfilePage({ params }: Props) {
                         </p>
                     </div>
                 </div>
+            </div>
+
+            {/* Calendar Section */}
+            <div id="agendar" className="w-full max-w-5xl">
+                <div className="text-center mb-6">
+                    <h2 className="text-2xl font-bold text-gray-800">Selecciona un horario disponible</h2>
+                    <p className="text-gray-500 mt-2">Haz clic en un espacio vacío para reservar tu cita.</p>
+                </div>
+                <PublicCalendar professionalId={userId} />
             </div>
         </main>
 
