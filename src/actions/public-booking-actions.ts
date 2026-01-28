@@ -3,7 +3,7 @@
 import { connectDB } from '@/lib/db';
 import Appointment, { AppointmentStatus } from '@/models/Appointment';
 import Patient from '@/models/Patient';
-import User from '@/models/User';
+import User, { IAvailability } from '@/models/User';
 import mongoose from 'mongoose';
 import { resend } from '@/lib/mail';
 import { getAppointmentConfirmationEmail } from '@/lib/email-templates';
@@ -26,10 +26,62 @@ export async function getPublicAvailability(professionalId: string) {
       .select('fechaInicio fechaFin')
       .lean<{ fechaInicio: Date; fechaFin: Date }[]>();
 
-    return appointments.map((appt) => ({
+    const realAppointments = appointments.map((appt) => ({
       start: appt.fechaInicio,
       end: appt.fechaFin,
     }));
+
+    // Generate artificial blocking events based on availability
+    const doctor = await User.findById(professionalId).select('availability').lean<{ availability?: IAvailability }>();
+    const blockingEvents: { start: Date; end: Date }[] = [];
+
+    if (doctor?.availability) {
+      const startDate = new Date();
+      startDate.setHours(0, 0, 0, 0);
+      const endDate = new Date();
+      endDate.setDate(endDate.getDate() + 90); // Generate blocks for next 90 days
+
+      const daysMap = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+      // Iterate date by date
+      for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        const dayName = daysMap[d.getDay()] as keyof IAvailability;
+        const config = doctor.availability[dayName];
+
+        const year = d.getFullYear();
+        const month = d.getMonth();
+        const date = d.getDate();
+
+        // If no config or not active, block the whole day
+        if (!config || !config.active) {
+          blockingEvents.push({
+            start: new Date(year, month, date, 0, 0, 0),
+            end: new Date(year, month, date, 23, 59, 59, 999),
+          });
+        } else {
+          // If active, block before start and after end
+          const [startH, startM] = config.start.split(':').map(Number);
+          const [endH, endM] = config.end.split(':').map(Number);
+
+          const startOfDay = new Date(year, month, date, 0, 0, 0);
+          const workStart = new Date(year, month, date, startH, startM, 0);
+          const workEnd = new Date(year, month, date, endH, endM, 0);
+          const endOfDay = new Date(year, month, date, 23, 59, 59, 999);
+
+          // Block morning (00:00 - Start)
+          if (workStart > startOfDay) {
+            blockingEvents.push({ start: startOfDay, end: workStart });
+          }
+
+          // Block evening (End - 23:59)
+          if (endOfDay > workEnd) {
+             blockingEvents.push({ start: workEnd, end: endOfDay });
+          }
+        }
+      }
+    }
+
+    return [...realAppointments, ...blockingEvents];
   } catch (error) {
     console.error('Error fetching availability:', error);
     return [];

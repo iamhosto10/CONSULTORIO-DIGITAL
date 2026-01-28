@@ -13,6 +13,7 @@ import {
   X,
   User as UserIcon,
   Stethoscope,
+  Settings,
 } from "lucide-react";
 import type { User } from "next-auth";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ const navItems = [
   { name: "Resumen", href: "/dashboard", icon: LayoutDashboard },
   { name: "Agenda", href: "/dashboard/agenda", icon: Calendar },
   { name: "Pacientes", href: "/dashboard/pacientes", icon: Users },
+  { name: "Configuración", href: "/dashboard/configuracion", icon: Settings },
 ];
 
 export default function Sidebar({ user }: SidebarProps) {
