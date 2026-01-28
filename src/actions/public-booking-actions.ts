@@ -3,7 +3,10 @@
 import { connectDB } from '@/lib/db';
 import Appointment, { AppointmentStatus } from '@/models/Appointment';
 import Patient from '@/models/Patient';
+import User from '@/models/User';
 import mongoose from 'mongoose';
+import { resend } from '@/lib/mail';
+import { getAppointmentConfirmationEmail } from '@/lib/email-templates';
 
 export async function getPublicAvailability(professionalId: string) {
   try {
@@ -115,6 +118,30 @@ export async function bookPublicAppointment(formData: FormData) {
       estado: AppointmentStatus.PENDIENTE,
       notas: 'Solicitud desde perfil público',
     });
+
+    // Send confirmation email
+    try {
+      const doctor = await User.findById(professionalId).select('nombre');
+      const doctorName = doctor ? doctor.nombre : 'Doctor';
+
+      const formattedDate = new Intl.DateTimeFormat('es-ES', {
+        dateStyle: 'full',
+        timeStyle: 'short',
+        timeZone: 'UTC',
+      }).format(start);
+
+      const htmlContent = getAppointmentConfirmationEmail(nombre, formattedDate, doctorName);
+
+      await resend.emails.send({
+        from: 'Consultorio <onboarding@resend.dev>',
+        to: email,
+        subject: `Confirmación de Cita - Dr. ${doctorName}`,
+        html: htmlContent
+      });
+    } catch (emailError) {
+      console.error('Error sending email:', emailError);
+      // Non-blocking error
+    }
 
     return { success: true, message: 'Solicitud enviada' };
 
