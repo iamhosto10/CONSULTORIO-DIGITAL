@@ -120,6 +120,32 @@ export async function bookPublicAppointment(formData: FormData) {
        return { success: false, message: 'La fecha de inicio debe ser anterior al fin' };
     }
 
+    // Validate Doctor Availability
+    const doctor = await User.findById(professionalId).select('availability nombre');
+    if (!doctor) {
+      return { success: false, message: 'Doctor no encontrado' };
+    }
+
+    if (doctor.availability) {
+      const daysMap = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+      const dayIndex = start.getUTCDay(); // 0=Sun, 1=Mon...
+      const dayKey = daysMap[dayIndex] as keyof IAvailability;
+      const dayConfig = doctor.availability[dayKey];
+
+      if (!dayConfig || !dayConfig.active) {
+        const diasEs = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        return { success: false, message: `El doctor no atiende los ${diasEs[dayIndex]}` };
+      }
+
+      const timeCheck = isTimeWithinRange(start, dayConfig.start, dayConfig.end);
+      if (timeCheck === 'before') {
+        return { success: false, message: `El doctor empieza a atender a las ${dayConfig.start}` };
+      }
+      if (timeCheck === 'after') {
+        return { success: false, message: `El doctor termina su turno a las ${dayConfig.end}` };
+      }
+    }
+
     // 1. Find or Create Patient
     // Scope search to the professional
     let patient = await Patient.findOne({
@@ -173,7 +199,6 @@ export async function bookPublicAppointment(formData: FormData) {
 
     // Send confirmation email
     try {
-      const doctor = await User.findById(professionalId).select('nombre');
       const doctorName = doctor ? doctor.nombre : 'Doctor';
 
       const formattedDate = new Intl.DateTimeFormat('es-ES', {
@@ -201,4 +226,20 @@ export async function bookPublicAppointment(formData: FormData) {
     console.error('Error booking appointment:', error);
     return { success: false, message: 'Ocurrió un error al procesar la solicitud' };
   }
+}
+
+function isTimeWithinRange(date: Date, startStr: string, endStr: string): 'before' | 'after' | 'within' {
+  const [startH, startM] = startStr.split(':').map(Number);
+  const [endH, endM] = endStr.split(':').map(Number);
+
+  const dateH = date.getUTCHours();
+  const dateM = date.getUTCMinutes();
+
+  const dateMinutes = dateH * 60 + dateM;
+  const startMinutes = startH * 60 + startM;
+  const endMinutes = endH * 60 + endM;
+
+  if (dateMinutes < startMinutes) return 'before';
+  if (dateMinutes > endMinutes) return 'after';
+  return 'within';
 }
