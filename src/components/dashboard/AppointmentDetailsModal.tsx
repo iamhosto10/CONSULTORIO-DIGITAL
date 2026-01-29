@@ -3,10 +3,12 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useState } from 'react';
 import PaymentModal from './PaymentModal';
+import { Calendar, DollarSign } from 'lucide-react';
 
 interface AppointmentDetailsModalProps {
   isOpen: boolean;
@@ -39,35 +41,38 @@ export default function AppointmentDetailsModal({
       <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Detalles de la Cita</DialogTitle>
+            <DialogTitle className="flex items-center">
+                <Calendar className="mr-2 h-5 w-5 text-primary" />
+                Detalles de la Consulta
+            </DialogTitle>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <span className="font-bold text-right">Paciente:</span>
-              <span className="col-span-3">{appointment.patientId?.nombre || 'Desconocido'}</span>
+              <Label className="text-right text-muted-foreground">Paciente:</Label>
+              <span className="col-span-3 font-medium">{appointment.patientId?.nombre || 'Desconocido'}</span>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <span className="font-bold text-right">Fecha:</span>
+              <Label className="text-right text-muted-foreground">Fecha:</Label>
               <span className="col-span-3 capitalize">
                 {format(new Date(appointment.fechaInicio), "EEEE, d 'de' MMMM", { locale: es })}
               </span>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <span className="font-bold text-right">Hora:</span>
+              <Label className="text-right text-muted-foreground">Hora:</Label>
               <span className="col-span-3">
                 {format(new Date(appointment.fechaInicio), 'HH:mm')} - {format(new Date(appointment.fechaFin), 'HH:mm')}
               </span>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <span className="font-bold text-right">Estado:</span>
+              <Label className="text-right text-muted-foreground">Estado:</Label>
               <div className="col-span-3">
                 {isPaid ? (
-                  <Badge className="bg-green-500 hover:bg-green-600">
+                  <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50">
                     Pagado: {formatCurrency(amount)}
                   </Badge>
                 ) : (
-                  <Badge className="bg-yellow-500 hover:bg-yellow-600 text-black">
+                  <Badge variant="outline" className="text-amber-600 border-amber-200 bg-amber-50">
                     Pendiente
                   </Badge>
                 )}
@@ -75,8 +80,8 @@ export default function AppointmentDetailsModal({
             </div>
              {appointment.notas && (
               <div className="grid grid-cols-4 items-start gap-4">
-                <span className="font-bold text-right mt-1">Notas:</span>
-                <p className="col-span-3 text-sm text-gray-500">{appointment.notas}</p>
+                <Label className="text-right text-muted-foreground mt-1">Notas:</Label>
+                <p className="col-span-3 text-sm text-muted-foreground">{appointment.notas}</p>
               </div>
             )}
           </div>
@@ -84,7 +89,8 @@ export default function AppointmentDetailsModal({
           <DialogFooter>
              <Button variant="outline" onClick={onClose}>Cerrar</Button>
             {!isPaid && (
-              <Button onClick={() => setShowPaymentModal(true)} className="bg-blue-600 hover:bg-blue-700">
+              <Button onClick={() => setShowPaymentModal(true)} variant="default">
+                <DollarSign className="mr-2 h-4 w-4" />
                 Cobrar
               </Button>
             )}
@@ -99,6 +105,8 @@ export default function AppointmentDetailsModal({
         }}
         appointmentId={appointment._id}
         defaultAmount={appointment.costo}
+        patientName={appointment.patientId?.nombre || 'Desconocido'}
+        date={new Date(appointment.fechaInicio)}
       />
     </>
   );
