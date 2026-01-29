@@ -1,3 +1,4 @@
+// Printable prescription page component
 import { auth } from '@/auth';
 import { connectDB } from '@/lib/db';
 import Patient, { IPatient } from '@/models/Patient';

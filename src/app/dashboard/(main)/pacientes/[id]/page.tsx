@@ -155,6 +155,7 @@ export default async function PatientDetailPage(props: PageProps) {
                             {moment(record.fecha).format('LLL')}
                           </span>
                           {record._id && (
+                            /* Print Prescription Button */
                             <Link href={`/dashboard/print/receta/${record._id}`} target="_blank">
                               <Button variant="outline" size="sm" className="h-8 w-8 p-0" title="Imprimir Receta">
                                 <Printer className="h-4 w-4 text-slate-600" />
