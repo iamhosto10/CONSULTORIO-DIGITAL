@@ -7,6 +7,13 @@ export interface IClinicalRecord {
   diagnostico?: string;
 }
 
+export interface IPatientFile {
+  nombre: string;
+  url: string;
+  tipo: string;
+  fecha: Date;
+}
+
 export interface IPatient extends Document {
   professionalId: mongoose.Types.ObjectId;
   cedula: string;
@@ -14,6 +21,7 @@ export interface IPatient extends Document {
   telefono?: string;
   email?: string;
   historiaClinica: IClinicalRecord[];
+  archivos: IPatientFile[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -30,6 +38,13 @@ const ClinicalRecordSchema = new Schema<IClinicalRecord>({
   diagnostico: {
     type: String,
   },
+});
+
+const PatientFileSchema = new Schema<IPatientFile>({
+  nombre: { type: String, required: true },
+  url: { type: String, required: true },
+  tipo: { type: String, required: true },
+  fecha: { type: Date, default: Date.now },
 });
 
 const PatientSchema = new Schema<IPatient>(
@@ -55,6 +70,7 @@ const PatientSchema = new Schema<IPatient>(
       type: String,
     },
     historiaClinica: [ClinicalRecordSchema],
+    archivos: [PatientFileSchema],
   },
   {
     timestamps: true,

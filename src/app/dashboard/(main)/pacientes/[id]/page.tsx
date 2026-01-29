@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import moment from 'moment';
 import 'moment/locale/es';
+import PatientFileManager from '@/components/dashboard/PatientFileManager';
 
 moment.locale('es');
 
@@ -40,6 +41,15 @@ export default async function PatientDetailPage(props: PageProps) {
   const sortedHistory = (patient.historiaClinica || []).sort((a, b) => {
     return new Date(b.fecha).getTime() - new Date(a.fecha).getTime();
   });
+
+  // Serialize files for client component
+  const serializedFiles = (patient.archivos || []).map(file => ({
+    nombre: file.nombre,
+    url: file.url,
+    tipo: file.tipo,
+    fecha: file.fecha ? new Date(file.fecha).toISOString() : new Date().toISOString(),
+    _id: (file as any)._id?.toString()
+  }));
 
   return (
     <div className="space-y-6">
@@ -173,6 +183,14 @@ export default async function PatientDetailPage(props: PageProps) {
                 ))}
               </div>
             )}
+          </div>
+
+          {/* Attached Files */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <PatientFileManager
+              patientId={patient._id.toString()}
+              files={serializedFiles as any}
+            />
           </div>
         </div>
       </div>

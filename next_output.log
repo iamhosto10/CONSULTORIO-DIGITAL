@@ -1,0 +1,24 @@
+
+> consultorio-digital@0.1.0 dev /app
+> next dev
+
+▲ Next.js 16.1.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+
+✓ Starting...
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+✓ Ready in 2.5s
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (/app/.next/dev/server/edge/chunks/691c0_@auth_core_f74cf8fb._.js:513:16)
+    at Auth (/app/.next/dev/server/edge/chunks/691c0_@auth_core_f74cf8fb._.js:5331:270)
+○ Compiling /test-files ...
+ GET /test-files 200 in 12.3s (compile: 11.0s, proxy.ts: 175ms, render: 1192ms)
+✓ Compiled in 7ms
+ ELIFECYCLE  Command failed.
+[?25h
