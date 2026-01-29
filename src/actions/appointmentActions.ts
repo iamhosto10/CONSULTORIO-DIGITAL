@@ -126,6 +126,12 @@ export async function getAppointments(start: Date | string, end: Date | string) 
       fechaFin: apt.fechaFin.toISOString(),
       createdAt: apt.createdAt.toISOString(),
       updatedAt: apt.updatedAt.toISOString(),
+      payment: apt.payment
+        ? {
+            ...apt.payment,
+            date: apt.payment.date ? apt.payment.date.toISOString() : undefined,
+          }
+        : undefined,
     }));
   } catch (error) {
     console.error('Error fetching appointments:', error);

@@ -15,6 +15,12 @@ export interface IAppointment extends Document {
   costo: number;
   estado: AppointmentStatus;
   notas?: string;
+  payment: {
+    status: 'pendiente' | 'pagado';
+    amount: number;
+    method: 'efectivo' | 'tarjeta' | 'transferencia' | 'otro';
+    date?: Date;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -56,6 +62,20 @@ const AppointmentSchema: Schema = new Schema(
     notas: {
       type: String,
       required: false,
+    },
+    payment: {
+      status: {
+        type: String,
+        enum: ['pendiente', 'pagado'],
+        default: 'pendiente',
+      },
+      amount: { type: Number, default: 0 },
+      method: {
+        type: String,
+        enum: ['efectivo', 'tarjeta', 'transferencia', 'otro'],
+        default: 'efectivo',
+      },
+      date: { type: Date },
     },
   },
   {

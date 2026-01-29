@@ -6,6 +6,7 @@ import 'moment/locale/es';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useMemo, useState } from 'react';
 import CreateAppointmentModal from './CreateAppointmentModal';
+import AppointmentDetailsModal from './AppointmentDetailsModal';
 
 // Configure moment locale
 moment.locale('es');
@@ -19,7 +20,18 @@ interface CalendarViewProps {
 
 const CalendarView = ({ appointments, patients }: CalendarViewProps) => {
   const [showModal, setShowModal] = useState(false);
-  const [selectedSlot, setSelectedSlot] = useState<{ start: Date; end: Date } | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState<{
+    start: Date;
+    end: Date;
+  } | null>(null);
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState<
+    string | null
+  >(null);
+
+  const selectedAppointment = useMemo(
+    () => appointments.find((apt) => apt._id === selectedAppointmentId),
+    [appointments, selectedAppointmentId]
+  );
 
   const events = useMemo(() => {
     return appointments.map((apt) => ({
@@ -35,6 +47,10 @@ const CalendarView = ({ appointments, patients }: CalendarViewProps) => {
     setShowModal(true);
   };
 
+  const handleSelectEvent = (event: any) => {
+    setSelectedAppointmentId(event.resource._id);
+  };
+
   return (
     <div style={{ height: '100%' }}>
       <Calendar
@@ -48,6 +64,7 @@ const CalendarView = ({ appointments, patients }: CalendarViewProps) => {
         max={new Date(0, 0, 0, 18, 0, 0)}
         selectable
         onSelectSlot={handleSelectSlot}
+        onSelectEvent={handleSelectEvent}
         messages={{
           next: 'Siguiente',
           previous: 'Anterior',
@@ -61,18 +78,26 @@ const CalendarView = ({ appointments, patients }: CalendarViewProps) => {
           event: 'Evento',
           noEventsInRange: 'No hay eventos en este rango',
         }}
-        eventPropGetter={(event) => ({
-          style: {
-            backgroundColor: '#3b82f6', // bg-blue-500
-            color: 'white',
-          },
-        })}
+        eventPropGetter={(event) => {
+          const isPaid = event.resource.payment?.status === 'pagado';
+          return {
+            style: {
+              backgroundColor: isPaid ? '#22c55e' : '#eab308', // green-500 : yellow-500
+              color: 'white',
+            },
+          };
+        }}
       />
       <CreateAppointmentModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         selectedSlot={selectedSlot}
         patients={patients}
+      />
+      <AppointmentDetailsModal
+        isOpen={!!selectedAppointment}
+        onClose={() => setSelectedAppointmentId(null)}
+        appointment={selectedAppointment}
       />
     </div>
   );

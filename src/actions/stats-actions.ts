@@ -55,14 +55,14 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       {
         $match: {
           professionalId: new mongoose.Types.ObjectId(userId),
-          estado: AppointmentStatus.COMPLETADA,
+          'payment.status': 'pagado',
           fechaInicio: { $gte: monthStart, $lte: monthEnd },
         },
       },
       {
         $group: {
           _id: null,
-          total: { $sum: '$costo' },
+          total: { $sum: '$payment.amount' },
         },
       },
     ]),
