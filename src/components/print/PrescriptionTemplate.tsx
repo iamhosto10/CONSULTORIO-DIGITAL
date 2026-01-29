@@ -39,16 +39,24 @@ export default function PrescriptionTemplate({ doctor, patient, note }: Prescrip
       `}</style>
 
       {/* Header */}
-      <header className="text-center space-y-2 mb-8 border-b border-slate-200 pb-6">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 uppercase">
-          {doctor.nombre}
+      <header className="text-center space-y-4 mb-8 border-b border-slate-200 pb-6">
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 uppercase">
+          CONSULTORIO MÉDICO
         </h1>
         <div className="text-sm text-slate-600 flex flex-col items-center gap-1">
+          <span className="text-lg font-semibold text-slate-800">Dr. {doctor.nombre}</span>
           <span className="font-medium text-slate-700">{doctor.especialidad}</span>
           <div className="flex items-center gap-2">
             <span>Reg: {doctor.registroMedico}</span>
-            <span>•</span>
-            <span>{doctor.email}</span>
+            {doctor.email && (
+              <>
+                  <span>•</span>
+                  <span>{doctor.email}</span>
+              </>
+            )}
+          </div>
+          <div className="text-xs text-slate-500 mt-1">
+             Av. Principal 123, Edificio Médico, Piso 2 • Tel: (555) 123-4567
           </div>
         </div>
       </header>
@@ -63,8 +71,8 @@ export default function PrescriptionTemplate({ doctor, patient, note }: Prescrip
           <p className="text-xs text-slate-500 uppercase font-semibold">Cédula</p>
           <p className="text-base font-medium">{patient.cedula}</p>
         </div>
-        <div>
-          <p className="text-xs text-slate-500 uppercase font-semibold">Fecha</p>
+        <div className="col-span-2">
+          <p className="text-xs text-slate-500 uppercase font-semibold">Fecha de Consulta</p>
           <p className="text-base font-medium capitalize">
             {moment(note.fecha).format('LL')}
           </p>
@@ -86,7 +94,7 @@ export default function PrescriptionTemplate({ doctor, patient, note }: Prescrip
 
         <div>
           <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2 border-l-4 border-slate-900 pl-2">
-            Tratamiento / Rx
+            Tratamiento / Indicaciones
           </h3>
           <div className="text-base text-slate-800 leading-relaxed whitespace-pre-wrap font-serif">
             {note.nota}
@@ -105,8 +113,8 @@ export default function PrescriptionTemplate({ doctor, patient, note }: Prescrip
           </div>
         </div>
 
-        <div className="mt-12 text-center text-[10px] text-slate-400 print:block hidden">
-          Generado el {moment().format('LLL')}
+        <div className="mt-12 text-center text-[10px] text-slate-400 print:block">
+          Generado por Consultorio Digital
         </div>
       </footer>
     </div>
