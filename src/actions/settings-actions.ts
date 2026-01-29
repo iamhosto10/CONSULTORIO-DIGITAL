@@ -21,7 +21,8 @@ export async function getAvailability() {
   }
 
   const defaultDay = { active: true, start: "08:00", end: "17:00" };
-  const defaultWeekend = { active: false, start: "08:00", end: "12:00" };
+  const defaultSaturday = { active: false, start: "08:00", end: "12:00" };
+  const defaultSunday = { active: false, start: "00:00", end: "00:00" };
 
   const defaults: IAvailability = {
       monday: { ...defaultDay },
@@ -29,17 +30,12 @@ export async function getAvailability() {
       wednesday: { ...defaultDay },
       thursday: { ...defaultDay },
       friday: { ...defaultDay },
-      saturday: { ...defaultWeekend },
-      sunday: { ...defaultWeekend }
+      saturday: { ...defaultSaturday },
+      sunday: { ...defaultSunday }
   };
 
   // Merge with defaults in case of partial data or new field
   const availability = user.availability || defaults;
-
-  // Ensure all keys exist (deep merge might be better but this is simple enough for 7 keys)
-  // If user.availability is completely missing, defaults is used.
-  // If user.availability is present, we assume Mongoose defaults populated it if it was created/updated recently.
-  // But for existing users, it might be undefined.
 
   return {
     availability: JSON.parse(JSON.stringify(availability)),

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-import { getAvailability, updateAvailability } from '@/actions/availability-actions';
+import { getAvailability, updateAvailability } from '@/actions/settings-actions';
 import { IAvailability, IDayAvailability } from '@/models/User';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
@@ -111,7 +111,7 @@ export default function ConfigurationPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Horario Laboral</CardTitle>
+          <CardTitle>Horario de Atención</CardTitle>
           <CardDescription>
             Define los días y horas en los que estás disponible para recibir citas.
           </CardDescription>

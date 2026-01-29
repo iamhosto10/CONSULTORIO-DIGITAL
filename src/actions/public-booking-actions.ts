@@ -52,21 +52,24 @@ export async function getPublicAvailability(professionalId: string) {
         const month = d.getMonth();
         const date = d.getDate();
 
+        // Construct UTC boundaries to align with system UTC usage
+        // We treat the local date components as UTC components
+        const startOfDay = new Date(Date.UTC(year, month, date, 0, 0, 0));
+        const endOfDay = new Date(Date.UTC(year, month, date, 23, 59, 59, 999));
+
         // If no config or not active, block the whole day
         if (!config || !config.active) {
           blockingEvents.push({
-            start: new Date(year, month, date, 0, 0, 0),
-            end: new Date(year, month, date, 23, 59, 59, 999),
+            start: startOfDay,
+            end: endOfDay,
           });
         } else {
           // If active, block before start and after end
           const [startH, startM] = config.start.split(':').map(Number);
           const [endH, endM] = config.end.split(':').map(Number);
 
-          const startOfDay = new Date(year, month, date, 0, 0, 0);
-          const workStart = new Date(year, month, date, startH, startM, 0);
-          const workEnd = new Date(year, month, date, endH, endM, 0);
-          const endOfDay = new Date(year, month, date, 23, 59, 59, 999);
+          const workStart = new Date(Date.UTC(year, month, date, startH, startM, 0));
+          const workEnd = new Date(Date.UTC(year, month, date, endH, endM, 0));
 
           // Block morning (00:00 - Start)
           if (workStart > startOfDay) {

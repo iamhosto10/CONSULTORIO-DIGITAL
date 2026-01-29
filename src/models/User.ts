@@ -88,8 +88,8 @@ const UserSchema: Schema = new Schema(
       },
       sunday: {
         active: { type: Boolean, default: false },
-        start: { type: String, default: "08:00" },
-        end: { type: String, default: "12:00" },
+        start: { type: String, default: "00:00" },
+        end: { type: String, default: "00:00" },
       },
     },
   },
