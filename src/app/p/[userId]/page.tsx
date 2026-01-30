@@ -42,8 +42,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `Dr. ${doctor.nombre} - ${doctor.especialidad} | Consultorio Digital`,
-    description: `Agenda tu cita con el Dr. ${doctor.nombre} de forma rápida y segura.`,
+    title: `Dr. ${doctor.nombre} | Agenda tu Cita`,
+    description: `Reserva tu cita médica con el Dr. ${doctor.nombre}. Ver disponibilidad y horarios. ${doctor.especialidad}`,
+    openGraph: {
+      title: `Dr. ${doctor.nombre} | Agenda tu Cita`,
+      description: `Reserva tu cita médica con el Dr. ${doctor.nombre}. Ver disponibilidad y horarios. ${doctor.especialidad}`,
+      type: 'profile',
+    },
   };
 }
 
