@@ -4,6 +4,7 @@ import { Users, Calendar, DollarSign, Clock } from 'lucide-react';
 import DashboardCharts from './_components/dashboard-charts';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import DownloadReportButton from '@/components/dashboard/DownloadReportButton';
 
 export default async function DashboardPage() {
   const stats = await getDashboardStats();
@@ -12,6 +13,7 @@ export default async function DashboardPage() {
     <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+        <DownloadReportButton />
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
