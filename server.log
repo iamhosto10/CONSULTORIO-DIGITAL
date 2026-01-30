@@ -1,5 +1,5 @@
 
-> consultorio-digital@0.1.0 dev /app
+> consultorio-digital@0.1.0 dev
 > next dev
 
 ▲ Next.js 16.1.4 (Turbopack)
@@ -13,12 +13,58 @@ You can learn more, including how to opt-out if you'd not like to participate in
 https://nextjs.org/telemetry
 
 ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
-✓ Ready in 2.4s
+✓ Ready in 2.7s
 [31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
-    at assertConfig (/app/.next/dev/server/edge/chunks/691c0_@auth_core_f74cf8fb._.js:513:16)
-    at Auth (/app/.next/dev/server/edge/chunks/691c0_@auth_core_f74cf8fb._.js:5331:270)
-○ Compiling /verify-modals ...
- GET /verify-modals 200 in 12.1s (compile: 11.3s, proxy.ts: 167ms, render: 694ms)
-✓ Compiled in 79ms
- ELIFECYCLE  Command failed.
-[?25h
+    at assertConfig (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:513:16)
+    at Auth (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:5331:210)
+○ Compiling /p/test-report ...
+ GET /p/test-report 200 in 9.1s (compile: 8.5s, proxy.ts: 146ms, render: 529ms)
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:513:16)
+    at Auth (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:5331:210)
+ GET /p/test-report 200 in 103ms (compile: 7ms, proxy.ts: 12ms, render: 85ms)
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:513:16)
+    at Auth (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:5331:210)
+⨯ Error: Please define the MONGODB_URI environment variable inside .env.local
+    at module evaluation (src/lib/db.ts:6:9)
+    at module evaluation (src/auth.ts:6:1)
+    at module evaluation (src/actions/report-actions.ts:3:1)
+    at module evaluation (.next-internal/server/app/p/test-report/page/actions.js (server actions loader):1:1)
+    at module evaluation (.next/dev/server/chunks/ssr/[root-of-the-server]__1675b117._.js:496:389)
+  4 |
+  5 | if (!MONGODB_URI) {
+> 6 |   throw new Error(
+    |         ^
+  7 |     "Please define the MONGODB_URI environment variable inside .env.local",
+  8 |   );
+  9 | } {
+  digest: '975777821'
+}
+ POST /p/test-report 500 in 1026ms (compile: 7ms, proxy.ts: 9ms, render: 1010ms)
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:513:16)
+    at Auth (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:5331:210)
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:513:16)
+    at Auth (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:5331:210)
+ GET /p/test-report 200 in 796ms (compile: 359ms, proxy.ts: 43ms, render: 394ms)
+[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:513:16)
+    at Auth (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:5331:210)
+⨯ Error: Please define the MONGODB_URI environment variable inside .env.local
+    at module evaluation (src/lib/db.ts:6:9)
+    at module evaluation (src/auth.ts:6:1)
+    at module evaluation (src/actions/report-actions.ts:3:1)
+    at module evaluation (.next-internal/server/app/p/test-report/page/actions.js (server actions loader):1:1)
+    at module evaluation (.next/dev/server/chunks/ssr/[root-of-the-server]__1675b117._.js:496:389)
+  4 |
+  5 | if (!MONGODB_URI) {
+> 6 |   throw new Error(
+    |         ^
+  7 |     "Please define the MONGODB_URI environment variable inside .env.local",
+  8 |   );
+  9 | } {
+  digest: '975777821'
+}
+ POST /p/test-report 500 in 1480ms (compile: 10ms, proxy.ts: 16ms, render: 1455ms)
