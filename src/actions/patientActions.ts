@@ -81,6 +81,40 @@ export async function getPatients(query?: string) {
   return JSON.parse(JSON.stringify(patients));
 }
 
+export async function getFilteredPatients(query?: string, currentPage: number = 1) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { patients: [], totalPages: 0 };
+  }
+
+  await connectDB();
+
+  const ITEMS_PER_PAGE = 10;
+  const skip = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  const filter: any = { professionalId: session.user.id };
+  if (query) {
+    const regex = new RegExp(query, 'i');
+    filter.$or = [{ nombre: regex }, { cedula: regex }, { email: regex }];
+  }
+
+  const [patients, totalCount] = await Promise.all([
+    Patient.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(ITEMS_PER_PAGE)
+      .lean(),
+    Patient.countDocuments(filter),
+  ]);
+
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+
+  return {
+    patients: JSON.parse(JSON.stringify(patients)),
+    totalPages,
+  };
+}
+
 export async function updatePatient(prevState: any, formData: FormData) {
   const id = formData.get('id') as string;
 

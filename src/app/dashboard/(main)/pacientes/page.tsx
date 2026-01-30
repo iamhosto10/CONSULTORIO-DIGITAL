@@ -1,4 +1,5 @@
-import { getPatients } from "@/actions/patientActions";
+import { getFilteredPatients } from "@/actions/patientActions";
+import Pagination from "@/components/dashboard/Pagination";
 import PatientsHeader from "@/components/dashboard/PatientsHeader";
 import Search from "@/components/dashboard/Search";
 import { Eye, FileText } from "lucide-react";
@@ -15,11 +16,13 @@ interface Patient {
 export default async function Page(props: {
   searchParams?: Promise<{
     query?: string;
+    page?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
   const query = searchParams?.query || "";
-  const patients: Patient[] = await getPatients(query);
+  const currentPage = Number(searchParams?.page) || 1;
+  const { patients, totalPages } = await getFilteredPatients(query, currentPage);
 
   return (
     <div className="w-full space-y-6">
@@ -32,10 +35,12 @@ export default async function Page(props: {
       {patients.length === 0 ? (
         <div className="mt-6 flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-gray-300 bg-gray-50 p-8 text-center animate-in fade-in-50">
           <h3 className="text-sm font-semibold text-gray-900">
-            No hay pacientes
+            {query ? 'No se encontraron pacientes' : 'No hay pacientes'}
           </h3>
           <p className="text-sm text-gray-500">
-            Comienza registrando un nuevo paciente.
+            {query
+              ? `No existen resultados para "${query}"`
+              : 'Comienza registrando un nuevo paciente.'}
           </p>
         </div>
       ) : (
@@ -44,7 +49,7 @@ export default async function Page(props: {
             <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
               {/* Mobile View */}
               <div className="md:hidden">
-                {patients.map((patient) => (
+                {patients.map((patient: Patient) => (
                   <div
                     key={patient._id}
                     className="mb-2 w-full rounded-md bg-white p-4 shadow-sm"
@@ -94,7 +99,7 @@ export default async function Page(props: {
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {patients.map((patient) => (
+                  {patients.map((patient: Patient) => (
                     <tr
                       key={patient._id}
                       className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
@@ -142,6 +147,9 @@ export default async function Page(props: {
                   ))}
                 </tbody>
               </table>
+            </div>
+            <div className="mt-5 flex w-full justify-center">
+              <Pagination totalPages={totalPages} />
             </div>
           </div>
         </div>

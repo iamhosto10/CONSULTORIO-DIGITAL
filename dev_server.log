@@ -5,17 +5,22 @@
 ▲ Next.js 16.1.4 (Turbopack)
 - Local:         http://localhost:3000
 - Network:       http://192.168.0.2:3000
+- Environments: .env.local
 
 ✓ Starting...
-Attention: Next.js now collects completely anonymous telemetry regarding usage.
-This information is used to shape Next.js' roadmap and prioritize features.
-You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
-https://nextjs.org/telemetry
-
 ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
-✓ Ready in 1874ms
-[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
-    at assertConfig (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:513:16)
-    at Auth (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:5331:210)
-○ Compiling /login ...
- GET /login 200 in 10.4s (compile: 9.9s, proxy.ts: 217ms, render: 341ms)
+✓ Ready in 1485ms
+✓ Compiled in 25ms
+○ Compiling /dashboard/pacientes ...
+ GET /dashboard/pacientes 307 in 4.6s (compile: 3.6s, proxy.ts: 155ms, render: 861ms)
+ GET /login 200 in 922ms (compile: 791ms, proxy.ts: 13ms, render: 118ms)
+✓ Compiled in 79ms
+ GET /dashboard/pacientes 200 in 638ms (compile: 122ms, proxy.ts: 10ms, render: 506ms)
+ GET /dashboard/pacientes?page=2 200 in 107ms (compile: 5ms, proxy.ts: 10ms, render: 92ms)
+ GET /dashboard/pacientes?page=1&query=Paciente+1 200 in 97ms (compile: 5ms, proxy.ts: 8ms, render: 84ms)
+ GET /dashboard/pacientes 200 in 360ms (compile: 6ms, proxy.ts: 7ms, render: 348ms)
+ GET /dashboard/pacientes?page=2 200 in 111ms (compile: 5ms, proxy.ts: 9ms, render: 98ms)
+ GET /dashboard/pacientes?page=1&query=Paciente+1 200 in 132ms (compile: 4ms, proxy.ts: 7ms, render: 121ms)
+✓ Compiled in 250ms
+✓ Compiled in 49ms
+✓ Compiled in 169ms
