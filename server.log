@@ -1,6 +1,6 @@
 
-> consultorio-digital@0.1.0 dev
-> next dev -p 3000
+> consultorio-digital@0.1.0 dev /app
+> next dev
 
 ▲ Next.js 16.1.4 (Turbopack)
 - Local:         http://localhost:3000
@@ -13,74 +13,12 @@ You can learn more, including how to opt-out if you'd not like to participate in
 https://nextjs.org/telemetry
 
 ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
-✓ Ready in 1954ms
+✓ Ready in 2.4s
 [31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
-    at assertConfig (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:513:16)
-    at Auth (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:5331:210)
-○ Compiling /p/test-calendar ...
-⨯ ./src/components/dashboard/AppointmentDetailsModal.tsx:5:1
-Module not found: Can't resolve '@/components/ui/badge'
-[0m [90m 3 |[39m [36mimport[39m { [33mDialog[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogHeader[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogFooter[39m } [36mfrom[39m [32m'@/components/ui/dialog'[39m[33m;[39m
- [90m 4 |[39m [36mimport[39m { [33mButton[39m } [36mfrom[39m [32m'@/components/ui/button'[39m[33m;[39m
-[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { [33mBadge[39m } [36mfrom[39m [32m'@/components/ui/badge'[39m[33m;[39m
- [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 6 |[39m [36mimport[39m { format } [36mfrom[39m [32m'date-fns'[39m[33m;[39m
- [90m 7 |[39m [36mimport[39m { es } [36mfrom[39m [32m'date-fns/locale'[39m[33m;[39m
- [90m 8 |[39m [36mimport[39m { useState } [36mfrom[39m [32m'react'[39m[33m;[39m[0m
-
-Import map: aliased to relative './src/components/ui/badge' inside of [project]/
-
-
-Import traces:
-  Client Component Browser:
-    ./src/components/dashboard/AppointmentDetailsModal.tsx [Client Component Browser]
-    ./src/components/dashboard/Calendar.tsx [Client Component Browser]
-    ./src/components/dashboard/Calendar.tsx [Server Component]
-    ./src/app/p/test-calendar/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./src/components/dashboard/AppointmentDetailsModal.tsx [Client Component SSR]
-    ./src/components/dashboard/Calendar.tsx [Client Component SSR]
-    ./src/components/dashboard/Calendar.tsx [Server Component]
-    ./src/app/p/test-calendar/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
-
-./src/components/dashboard/AppointmentDetailsModal.tsx:5:1
-Module not found: Can't resolve '@/components/ui/badge'
-[0m [90m 3 |[39m [36mimport[39m { [33mDialog[39m[33m,[39m [33mDialogContent[39m[33m,[39m [33mDialogHeader[39m[33m,[39m [33mDialogTitle[39m[33m,[39m [33mDialogFooter[39m } [36mfrom[39m [32m'@/components/ui/dialog'[39m[33m;[39m
- [90m 4 |[39m [36mimport[39m { [33mButton[39m } [36mfrom[39m [32m'@/components/ui/button'[39m[33m;[39m
-[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { [33mBadge[39m } [36mfrom[39m [32m'@/components/ui/badge'[39m[33m;[39m
- [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 6 |[39m [36mimport[39m { format } [36mfrom[39m [32m'date-fns'[39m[33m;[39m
- [90m 7 |[39m [36mimport[39m { es } [36mfrom[39m [32m'date-fns/locale'[39m[33m;[39m
- [90m 8 |[39m [36mimport[39m { useState } [36mfrom[39m [32m'react'[39m[33m;[39m[0m
-
-Import map: aliased to relative './src/components/ui/badge' inside of [project]/
-
-
-Import traces:
-  Client Component Browser:
-    ./src/components/dashboard/AppointmentDetailsModal.tsx [Client Component Browser]
-    ./src/components/dashboard/Calendar.tsx [Client Component Browser]
-    ./src/components/dashboard/Calendar.tsx [Server Component]
-    ./src/app/p/test-calendar/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./src/components/dashboard/AppointmentDetailsModal.tsx [Client Component SSR]
-    ./src/components/dashboard/Calendar.tsx [Client Component SSR]
-    ./src/components/dashboard/Calendar.tsx [Server Component]
-    ./src/app/p/test-calendar/page.tsx [Server Component]
-
-https://nextjs.org/docs/messages/module-not-found
-
-
- GET /p/test-calendar 500 in 15.3s (compile: 14.7s, proxy.ts: 222ms, render: 332ms)
-✓ Compiled in 200ms
-[31m[auth][error][0m MissingSecret: Please define a `secret`. Read more at https://errors.authjs.dev#missingsecret
-    at assertConfig (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:513:16)
-    at Auth (/app/.next/dev/server/edge/chunks/node_modules_@auth_core_a56a313d._.js:5331:210)
-Your app (or one of its dependencies) is using an outdated JSX transform. Update to the modern JSX transform for faster performance: https://react.dev/link/new-jsx-transform
- GET /p/test-calendar 200 in 918ms (compile: 379ms, proxy.ts: 8ms, render: 531ms)
+    at assertConfig (/app/.next/dev/server/edge/chunks/691c0_@auth_core_f74cf8fb._.js:513:16)
+    at Auth (/app/.next/dev/server/edge/chunks/691c0_@auth_core_f74cf8fb._.js:5331:270)
+○ Compiling /verify-modals ...
+ GET /verify-modals 200 in 12.1s (compile: 11.3s, proxy.ts: 167ms, render: 694ms)
+✓ Compiled in 79ms
+ ELIFECYCLE  Command failed.
+[?25h

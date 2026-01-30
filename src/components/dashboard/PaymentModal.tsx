@@ -53,9 +53,9 @@ export default function PaymentModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+      <DialogContent className="sm:max-w-[425px] bg-background shadow-xl border-2 border-border sm:rounded-xl overflow-hidden">
+        <DialogHeader className="bg-muted/20 p-6 -m-6 mb-2 border-b">
+          <DialogTitle className="text-xl font-semibold text-foreground flex items-center gap-2">
             <DollarSign className="w-5 h-5 text-green-500" />
             Registrar Pago
           </DialogTitle>
@@ -63,7 +63,7 @@ export default function PaymentModal({
 
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label htmlFor="amount">Monto</Label>
+            <Label htmlFor="amount" className="text-muted-foreground font-medium">Monto</Label>
             <div className="relative">
               <DollarSign className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -77,7 +77,7 @@ export default function PaymentModal({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="method">Método de Pago</Label>
+            <Label htmlFor="method" className="text-muted-foreground font-medium">Método de Pago</Label>
             <Select value={method} onValueChange={setMethod}>
               <SelectTrigger>
                 <SelectValue placeholder="Seleccionar método" />
@@ -100,7 +100,7 @@ export default function PaymentModal({
           </div>
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="bg-muted/20 p-6 -m-6 mt-4 border-t">
           <Button variant="outline" onClick={onClose} disabled={loading}>
             Cancelar
           </Button>
